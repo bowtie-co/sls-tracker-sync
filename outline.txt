@@ -1,0 +1,25 @@
+Create ticket
+single user assignment
+comment update to track general action
+
+type of pivotal tickets:
+Chore == Task
+Feature == Task
+Bug == Bug
+
+Can we assign story points?
+
+status changes
+
+pivotal statuses:
+Unstarted = todo
+Started = in prog
+Finished = in prog
+Delivered = Ready for verification
+Accept = Done
+Rejected = Todo
+
+Nice to have:
+Pivotal icebox == WND?
+
+how do we solve the blocked flag?

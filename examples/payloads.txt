@@ -1,0 +1,79 @@
+CREATE PIVOTAL STORY
+====================
+
+Payload {
+  kind: 'story_create_activity',
+  guid: '2478966_1782',
+  project_version: 1782,
+  message: 'Charlie McClung added this bug',
+  highlight: 'added',
+  changes: [
+    {
+      kind: 'story',
+      change_type: 'create',
+      id: 177290623,
+      new_values: [Object],
+      name: 'This is a bug',
+      story_type: 'bug'
+    }
+  ],
+  primary_resources: [
+    {
+      kind: 'story',
+      id: 177290623,
+      name: 'This is a bug',
+      story_type: 'bug',
+      url: 'https://www.pivotaltracker.com/story/show/177290623'
+    }
+  ],
+  secondary_resources: [],
+  project: { kind: 'project', id: 2478966, name: 'NFL Put a Ring on It' },
+  performed_by: {
+    kind: 'person',
+    id: 1994223,
+    name: 'Charlie McClung',
+    initials: 'CM'
+  },
+  occurred_at: 1615401210000
+}
+
+====================
+UPDATE PIVOTAL STORY
+====================
+
+Payload body {
+  kind: 'story_update_activity',
+  guid: '2478966_1781',
+  project_version: 1781,
+  message: 'Charlie McClung edited this feature',
+  highlight: 'edited',
+  changes: [
+    {
+      kind: 'story',
+      change_type: 'update',
+      id: 177290276,
+      original_values: [Object],
+      new_values: [Object],
+      name: 'Test story - updated',
+      story_type: 'feature'
+    }
+  ],
+  primary_resources: [
+    {
+      kind: 'story',
+      id: 177290276,
+      name: 'Test story - updated',
+      story_type: 'feature',
+      url: 'https://www.pivotaltracker.com/story/show/177290276'
+    }
+  ],
+  secondary_resources: [],
+  project: { kind: 'project', id: 2478966, name: 'NFL Put a Ring on It' },
+  performed_by: {
+    kind: 'person',
+    id: 1994223,
+    name: 'Charlie McClung',
+    initials: 'CM'
+  },
+  occurred_at: 1615400245000
+}

@@ -1,0 +1,25 @@
+{
+  "name": "sls-tracker-sync",
+  "version": "0.0.1",
+  "description": "Sync project trackers",
+  "main": "handler.js",
+  "dependencies": {
+    "node-fetch": "^2.6.1",
+    "serverless-offline": "^6.8.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "sls offline start",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bowtie-co/sls-tracker-sync.git"
+  },
+  "author": "Bowtie",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bowtie-co/sls-tracker-sync/issues"
+  },
+  "homepage": "https://github.com/bowtie-co/sls-tracker-sync#readme"
+}
