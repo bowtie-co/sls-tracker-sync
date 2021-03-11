@@ -1,5 +1,9 @@
 'use strict';
 
+require('dotenv').config();
+
+const { JIRA_USER_ID, JIRA_PROJECT_KEY } = process.env;
+
 const { createIssue, editIssue, findIssue, transitionIssue, debugStuff } = require('./src/bitbucket');
 
 module.exports.sync = async event => {
@@ -34,15 +38,15 @@ module.exports.sync = async event => {
           const newIssueData = {
             fields: {
               project: {
-                key: 'TPJ'
+                key: JIRA_PROJECT_KEY
               },
-              summary: `[${createChanges.id}] ${createChanges.new_values.name}`,
+              summary: `[pt_${createChanges.id}] ${createChanges.new_values.name}`,
               description: createChanges.new_values.description,
               issuetype: {
                 name: createChanges.story_type === 'bug' ? 'Bug' : 'Task'
               },
               assignee: {
-                id: '557058:bcb5b277-52ff-49d0-85b4-31fd724cc5fa'
+                id: JIRA_USER_ID
               }
             }
           };
@@ -57,33 +61,21 @@ module.exports.sync = async event => {
       case 'story_update_activity':
         const updateChanges = payload.changes.find((change) => change.kind === 'story');
 
-        if (updateChanges) {
-          // const newIssueData = {
-          //   fields: {
-          //     project: {
-          //       key: 'TPJ'
-          //     },
-          //     summary: `[${updateChanges.id}] ${updateChanges.new_values.name}`,
-          //     description: updateChanges.new_values.description,
-          //     issuetype: {
-          //       name: updateChanges.story_type === 'bug' ? 'Bug' : 'Task'
-          //     },
-          //     assignee: {
-          //       id: '557058:bcb5b277-52ff-49d0-85b4-31fd724cc5fa'
-          //     }
-          //   }
-          // };
+        let existingIssue;
+        const existingIssues = await findIssue(`pt_${updateChanges.id}`);
 
-          // const createIssueResponse = await createIssue(newIssueData);
+        console.log('Find existing issue:', existingIssues);
 
-          // Unstarted = todo
-          // Started = in prog
-          // Finished = in prog
-          // Delivered = Ready for verification
-          // Accepted = Done
-          // Rejected = Todo
+        if (existingIssues.sections.length && existingIssues.sections[0].issues.length > 0) {
+          existingIssue = existingIssues.sections[0].issues[0];
+        }
 
-          const updateData = {};
+        if (existingIssue && updateChanges) {
+          const updateData = {
+            // Name
+            // Description
+            // Comment
+          };
 
           if (updateChanges.new_values.current_state) {
             let transitionId = 11;
@@ -96,9 +88,7 @@ module.exports.sync = async event => {
               transitionId = 41;
             }
 
-            const transitionResponse = await transitionIssue('TPJ-5', { transition: { id: transitionId } });
-
-            console.log('Transition Issue:', transitionResponse);
+            await transitionIssue(existingIssue.key, { transition: { id: transitionId } });
           }
 
           // const debugResponse = await debugStuff('FB-55');

@@ -34,8 +34,8 @@ module.exports.editIssue = async (id, bodyData) => {
   return await response.json();
 };
 
-module.exports.findIssue = async (pivotalId) => {
-  const response = await fetch(`${JIRA_API_URL}/rest/api/2/issue/[${pivotalId}]`, {
+module.exports.findIssue = async (query) => {
+  const response = await fetch(`${JIRA_API_URL}/rest/api/2/issue/picker?query=${query}`, {
     method: 'GET',
     headers: {
       'Authorization': `Basic ${Buffer.from(

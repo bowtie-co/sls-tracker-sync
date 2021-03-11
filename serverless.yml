@@ -10,10 +10,6 @@ provider:
   profile: ${opt:aws-profile, "bowtie_agency"}
   environment:
     SLS_STAGE: ${self:custom.stage}
-    # https://developer.atlassian.com/cloud/jira/platform/rest/v3/intro/#authentication
-    JIRA_API_USER: charlie@bowtie.co
-    JIRA_API_TOKEN: xxx
-    JIRA_API_URL: https://heliosinteract.atlassian.net
 
 custom:
   stage: ${opt:stage, self:provider.stage}
