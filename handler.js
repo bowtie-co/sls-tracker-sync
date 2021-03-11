@@ -4,7 +4,7 @@ require('dotenv').config();
 
 const { JIRA_USER_ID, JIRA_PROJECT_KEY } = process.env;
 
-const { createIssue, editIssue, findIssue, transitionIssue, debugStuff } = require('./src/bitbucket');
+const { createIssue, editIssue, findIssue, transitionIssue, addComment, debugStuff } = require('./src/bitbucket');
 
 module.exports.sync = async event => {
   console.log('Sync with event', event);
@@ -14,20 +14,7 @@ module.exports.sync = async event => {
 
     console.log('Payload', payload);
 
-    // Loop through payload changes?
-    /**
-     * payload.highlight (added, edited, estimated, delivered, accepted, rejected)
-     * payload.changes = [
-     *  {
-     *    kind: 'story',
-     *    change_type: 'create',
-     *    id: 177290623,
-     *    new_values: [Object],
-     *    name: 'This is a bug',
-     *    story_type: 'bug'
-     *  }
-     * ]
-     */
+    let existingIssue;
 
     switch (payload.kind) {
       // https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-issues/#api-rest-api-3-issue-post
@@ -60,53 +47,82 @@ module.exports.sync = async event => {
       // https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-issues/#api-rest-api-3-issue-issueidorkey-put
       case 'story_update_activity':
         const updateChanges = payload.changes.find((change) => change.kind === 'story');
-
-        let existingIssue;
         const existingIssues = await findIssue(`pt_${updateChanges.id}`);
 
         console.log('Find existing issue:', existingIssues);
 
-        if (existingIssues.sections.length && existingIssues.sections[0].issues.length > 0) {
-          existingIssue = existingIssues.sections[0].issues[0];
+        if (existingIssues.issues.length) {
+          existingIssue = existingIssues.issues[0];
         }
 
-        /**
-         * OR CREATE with title/description update ...
-         */
-
-        if (existingIssue && updateChanges) {
+        if (updateChanges) {
           const updateData = {
-            // Name
-            // Description
-            // Comment
+            summary: `[pt_${updateChanges.id}] ${updateChanges.name}`,
+            issuetype: {
+              name: updateChanges.story_type === 'bug' ? 'Bug' : 'Task'
+            },
           };
 
-          if (updateChanges.new_values.current_state) {
-            let transitionId = 11;
-
-            if (['started', 'finished'].includes(updateChanges.new_values.current_state)) {
-              transitionId = 21;
-            } else if (['accepted'].includes(updateChanges.new_values.current_state)) {
-              transitionId = 31;
-            } else if (['delivered'].includes(updateChanges.new_values.current_state)) {
-              transitionId = 41;
-            }
-
-            await transitionIssue(existingIssue.key, { transition: { id: transitionId } });
+          if (updateChanges.new_values.description) {
+            updateData.description = updateChanges.new_values.description;
           }
 
-          // const debugResponse = await debugStuff('FB-55');
+          if (existingIssue) {
+            const editResponse = await editIssue(existingIssue.key, { fields: updateData });
 
-          // console.log('Debug resp:', debugResponse);
+            console.log('Edited issue', editResponse);
+          } else {
+            const newIssueFields = Object.assign({
+              project: {
+                key: JIRA_PROJECT_KEY
+              },
+              summary: `[pt_${updateChanges.id}] ${updateChanges.name}`,
+              issuetype: {
+                name: updateChanges.story_type === 'bug' ? 'Bug' : 'Task'
+              },
+              assignee: {
+                id: JIRA_USER_ID
+              }
+            }, updateData);
+
+            existingIssue = await createIssue({ fields: newIssueFields });
+
+            console.log('Created issue (from edit)', existingIssue);
+          }
+        }
+
+        if (existingIssue && updateChanges && updateChanges.new_values.current_state) {
+          let transitionId = 11;
+
+          if (['started', 'finished'].includes(updateChanges.new_values.current_state)) {
+            transitionId = 21;
+          } else if (['accepted'].includes(updateChanges.new_values.current_state)) {
+            transitionId = 31;
+          } else if (['delivered'].includes(updateChanges.new_values.current_state)) {
+            transitionId = 41;
+          }
+
+          await transitionIssue(existingIssue.key, { transition: { id: transitionId } });
         }
 
         break;
       case 'comment_create_activity':
-        const commentChanges = payload.changes.filter((change) => change.kind === 'comment');
+        const commentChanges = payload.changes.find((change) => change.kind === 'comment');
 
         if (commentChanges && commentChanges.new_values.text) {
-          // find with => commentChanges.new_values.story_id;
-          // addComment();
+          const existingIssues2 = await findIssue(`pt_${commentChanges.new_values.story_id}`);
+
+          console.log('Find existing issue:', existingIssues2);
+
+          if (existingIssues2.issues.length) {
+            existingIssue = existingIssues2.issues[0];
+          }
+
+          if (existingIssue && commentChanges && commentChanges.new_values.text) {
+            const addCommentResponse = await addComment(existingIssue.key, { body: commentChanges.new_values.text });
+
+            console.log('Add Comment:', addCommentResponse);
+          }
         }
 
         break;

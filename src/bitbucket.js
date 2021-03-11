@@ -31,11 +31,11 @@ module.exports.editIssue = async (id, bodyData) => {
     body: JSON.stringify(bodyData)
   });
 
-  return await response.json();
+  return await response.text();
 };
 
 module.exports.findIssue = async (query) => {
-  const response = await fetch(`${JIRA_API_URL}/rest/api/2/issue/picker?query=${query}`, {
+  const response = await fetch(`${JIRA_API_URL}/rest/api/2/search?jql=summary~${query}`, {
     method: 'GET',
     headers: {
       'Authorization': `Basic ${Buffer.from(
@@ -64,6 +64,23 @@ module.exports.transitionIssue = async (id, bodyData) => {
 
   return await response.text();
 };
+
+module.exports.addComment = async (id, bodyData) => {
+  const response = await fetch(`${JIRA_API_URL}/rest/api/2/issue/${id}/comment`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Basic ${Buffer.from(
+        `${JIRA_API_USER}:${JIRA_API_TOKEN}`
+      ).toString('base64')}`,
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(bodyData)
+  });
+
+  return await response.json();
+};
+
 
 
 module.exports.debugStuff = async (key) => {
