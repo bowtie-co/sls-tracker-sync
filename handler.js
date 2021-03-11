@@ -70,6 +70,10 @@ module.exports.sync = async event => {
           existingIssue = existingIssues.sections[0].issues[0];
         }
 
+        /**
+         * OR CREATE with title/description update ...
+         */
+
         if (existingIssue && updateChanges) {
           const updateData = {
             // Name
@@ -98,7 +102,13 @@ module.exports.sync = async event => {
 
         break;
       case 'comment_create_activity':
-        const commentChanges = payload.changes.filter((change) => change.kind === 'comment')
+        const commentChanges = payload.changes.filter((change) => change.kind === 'comment');
+
+        if (commentChanges && commentChanges.new_values.text) {
+          // find with => commentChanges.new_values.story_id;
+          // addComment();
+        }
+
         break;
     }
 
