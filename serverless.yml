@@ -1,4 +1,4 @@
-service: sls-tracker-sync
+service: sls-tracker-sync-ordermark
 
 plugins:
   - serverless-offline
