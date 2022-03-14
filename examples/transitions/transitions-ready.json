@@ -72,6 +72,30 @@
       "isAvailable": true,
       "isConditional": false,
       "isLooped": false
+    },
+    {
+      "id": "191",
+      "name": "Merge to Staging",
+      "to": {
+        "self": "https://ordermark.atlassian.net/rest/api/2/status/10420",
+        "description": "",
+        "iconUrl": "https://ordermark.atlassian.net/images/icons/statuses/generic.png",
+        "name": "STG Testing",
+        "id": "10420",
+        "statusCategory": {
+          "self": "https://ordermark.atlassian.net/rest/api/2/statuscategory/4",
+          "id": 4,
+          "key": "indeterminate",
+          "colorName": "yellow",
+          "name": "In Progress"
+        }
+      },
+      "hasScreen": false,
+      "isGlobal": false,
+      "isInitial": false,
+      "isAvailable": true,
+      "isConditional": false,
+      "isLooped": false
     }
   ]
 }

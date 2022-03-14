@@ -212,6 +212,40 @@ const reopenedTransitions = {
   }
 };
 
+const readyTransitions = {
+  191: {
+    id: '191',
+    name: 'Merge to Staging',
+    to: {
+      id: '10420',
+      name: 'STG Testing',
+      statusCategory: {
+        id: 4,
+        key: 'indeterminate',
+        name: 'In Progress'
+      }
+    }
+  }
+};
+
+const releaseTransitions = {
+  221: {
+    id: '221',
+    name: 'Release',
+    to: {
+      id: '10001',
+      name: 'Done',
+      statusCategory: {
+        id: 3,
+        key: 'done',
+        name: 'Done'
+      }
+    }
+  }
+};
+
+const doneTransitions = defaultTransitions;
+
 const statusMap = {
   Backlog: [],
 

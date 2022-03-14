@@ -72,6 +72,30 @@
       "isAvailable": true,
       "isConditional": false,
       "isLooped": false
+    },
+    {
+      "id": "221",
+      "name": "Release",
+      "to": {
+        "self": "https://ordermark.atlassian.net/rest/api/2/status/10001",
+        "description": "",
+        "iconUrl": "https://ordermark.atlassian.net/",
+        "name": "Done",
+        "id": "10001",
+        "statusCategory": {
+          "self": "https://ordermark.atlassian.net/rest/api/2/statuscategory/3",
+          "id": 3,
+          "key": "done",
+          "colorName": "green",
+          "name": "Done"
+        }
+      },
+      "hasScreen": true,
+      "isGlobal": false,
+      "isInitial": false,
+      "isAvailable": true,
+      "isConditional": false,
+      "isLooped": false
     }
   ]
 }
