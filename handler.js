@@ -2,15 +2,25 @@
 
 require('dotenv').config();
 
-const { JIRA_USER_ID, JIRA_PROJECT_KEY, JIRA_PREFIX = 'pt_' } = process.env;
+const { JIRA_USER_ID, JIRA_PROJECT_KEY, JIRA_PARENT_KEY, JIRA_PREFIX = 'pt_' } = process.env;
 
 const { createIssue, editIssue, findIssue, transitionIssue, addComment, debugStuff } = require('./src/bitbucket');
 
 const ticketPrefix = (id) => JIRA_PREFIX + id;
 const genSummary = (id, title) => `[${ticketPrefix(id)}] ${title}`;
 
+const buildIssueData = (data) => {
+  if (JIRA_PARENT_KEY) {
+    Object.assign(data.fields, {
+      parent: { key: JIRA_PARENT_KEY }
+    });
+  }
+
+  return data;
+};
+
 module.exports.sync = async event => {
-  console.log('Sync with event', event);
+  // console.log('Sync with event', event);
 
   try {
     const payload = JSON.parse(event.body);
@@ -41,7 +51,7 @@ module.exports.sync = async event => {
             }
           };
 
-          const createIssueResponse = await createIssue(newIssueData);
+          const createIssueResponse = await createIssue(buildIssueData(newIssueData));
 
           console.log('Created Jira issue:', createIssueResponse);
         }
@@ -71,7 +81,7 @@ module.exports.sync = async event => {
           }
 
           if (existingIssue) {
-            const editResponse = await editIssue(existingIssue.key, { fields: updateData });
+            const editResponse = await editIssue(existingIssue.key, buildIssueData({ fields: updateData }));
 
             console.log('Edited issue', editResponse);
           } else {
@@ -88,7 +98,7 @@ module.exports.sync = async event => {
               }
             }, updateData);
 
-            existingIssue = await createIssue({ fields: newIssueFields });
+            existingIssue = await createIssue(buildIssueData({ fields: newIssueFields }));
 
             console.log('Created issue (from edit)', existingIssue);
           }
