@@ -8,9 +8,14 @@
     "node-fetch": "^2.6.1",
     "serverless-offline": "^6.8.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "serverless": "^1.83.3"
+  },
   "scripts": {
     "start": "sls offline start",
+    "deploy": "sls deploy",
+    "info": "sls info",
+    "remove": "sls remove",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
