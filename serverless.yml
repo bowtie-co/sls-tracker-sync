@@ -1,4 +1,4 @@
-service: sls-tracker-sync
+service: sls-tracker-sync-nextbite
 
 plugins:
   - serverless-offline

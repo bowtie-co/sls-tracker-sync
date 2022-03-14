@@ -2,9 +2,12 @@
 
 require('dotenv').config();
 
-const { JIRA_USER_ID, JIRA_PROJECT_KEY } = process.env;
+const { JIRA_USER_ID, JIRA_PROJECT_KEY, JIRA_PREFIX = 'pt_' } = process.env;
 
 const { createIssue, editIssue, findIssue, transitionIssue, addComment, debugStuff } = require('./src/bitbucket');
+
+const ticketPrefix = (id) => JIRA_PREFIX + id;
+const genSummary = (id, title) => `[${ticketPrefix(id)}] ${title}`;
 
 module.exports.sync = async event => {
   console.log('Sync with event', event);
@@ -27,7 +30,7 @@ module.exports.sync = async event => {
               project: {
                 key: JIRA_PROJECT_KEY
               },
-              summary: `[pt_${createChanges.id}] ${createChanges.new_values.name}`,
+              summary: genSummary(createChanges.id, createChanges.new_values.name),
               description: createChanges.new_values.description,
               issuetype: {
                 name: createChanges.story_type === 'bug' ? 'Bug' : 'Task'
@@ -47,7 +50,7 @@ module.exports.sync = async event => {
       // https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-issues/#api-rest-api-3-issue-issueidorkey-put
       case 'story_update_activity':
         const updateChanges = payload.changes.find((change) => change.kind === 'story');
-        const existingIssues = await findIssue(`pt_${updateChanges.id}`);
+        const existingIssues = await findIssue(ticketPrefix(updateChanges.id));
 
         console.log('Find existing issue:', existingIssues);
 
@@ -57,7 +60,7 @@ module.exports.sync = async event => {
 
         if (updateChanges) {
           const updateData = {
-            summary: `[pt_${updateChanges.id}] ${updateChanges.name}`,
+            summary: genSummary(updateChanges.id, updateChanges.name),
             issuetype: {
               name: updateChanges.story_type === 'bug' ? 'Bug' : 'Task'
             },
@@ -76,7 +79,7 @@ module.exports.sync = async event => {
               project: {
                 key: JIRA_PROJECT_KEY
               },
-              summary: `[pt_${updateChanges.id}] ${updateChanges.name}`,
+              summary: genSummary(updateChanges.id, updateChanges.name),
               issuetype: {
                 name: updateChanges.story_type === 'bug' ? 'Bug' : 'Task'
               },
@@ -110,7 +113,7 @@ module.exports.sync = async event => {
         const commentChanges = payload.changes.find((change) => change.kind === 'comment');
 
         if (commentChanges && commentChanges.new_values.text) {
-          const existingIssues2 = await findIssue(`pt_${commentChanges.new_values.story_id}`);
+          const existingIssues2 = await findIssue(ticketPrefix(commentChanges.new_values.story_id));
 
           console.log('Find existing issue:', existingIssues2);
 
