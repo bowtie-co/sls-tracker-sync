@@ -12,7 +12,7 @@ if (['started', 'finished'].includes(updateChanges.new_values.current_state)) {
   transitionId = 41;
 }
 
-const backlogTransitions = {
+const defaultTransitions = {
   11: {
     id: '11',
     name: 'Backlog',
@@ -51,7 +51,10 @@ const backlogTransitions = {
         name: 'To Do'
       }
     }
-  },
+  }
+};
+
+const backlogTransitions = {
   141: {
     id: '141',
     name: 'Selected for Development',
@@ -81,45 +84,6 @@ const backlogTransitions = {
 };
 
 const startedTransitions = {
-  11: {
-    id: '11',
-    name: 'Backlog',
-    to: {
-      id: '10210',
-      name: 'Backlog',
-      statusCategory: {
-        id: 2,
-        key: 'new',
-        name: 'To Do'
-      }
-    }
-  },
-  91: {
-    id: '91',
-    name: 'Mark Closed',
-    to: {
-      id: '6',
-      name: 'Closed',
-      statusCategory: {
-        id: 3,
-        key: 'done',
-        name: 'Done'
-      }
-    }
-  },
-  101: {
-    id: '101',
-    name: 'Reopen',
-    to: {
-      id: '4',
-      name: 'Backlog',
-      statusCategory: {
-        id: 2,
-        key: 'new',
-        name: 'To Do'
-      }
-    }
-  },
   161: {
     id: '161',
     name: 'Request Review',
@@ -149,45 +113,6 @@ const startedTransitions = {
 };
 
 const reviewTransitions = {
-  11: {
-    id: '11',
-    name: 'Backlog',
-    to: {
-      id: '10210',
-      name: 'Backlog',
-      statusCategory: {
-        id: 2,
-        key: 'new',
-        name: 'To Do'
-      }
-    }
-  },
-  91: {
-    id: '91',
-    name: 'Mark Closed',
-    to: {
-      id: '6',
-      name: 'Closed',
-      statusCategory: {
-        id: 3,
-        key: 'done',
-        name: 'Done'
-      }
-    }
-  },
-  101: {
-    id: '101',
-    name: 'Reopen',
-    to: {
-      id: '4',
-      name: 'Backlog',
-      statusCategory: {
-        id: 2,
-        key: 'new',
-        name: 'To Do'
-      }
-    }
-  },
   201: {
     id: '201',
     name: 'Ready for Testing',
@@ -229,52 +154,13 @@ const reviewTransitions = {
   }
 };
 
-const doneTransitions = {
-  11: {
-    id: '11',
-    name: 'Backlog',
+const testingTransitions = {
+  211: {
+    id: '211',
+    name: 'Passed FB Testing',
     to: {
-      id: '10210',
-      name: 'Backlog',
-      statusCategory: {
-        id: 2,
-        key: 'new',
-        name: 'To Do'
-      }
-    }
-  },
-  91: {
-    id: '91',
-    name: 'Mark Closed',
-    to: {
-      id: '6',
-      name: 'Closed',
-      statusCategory: {
-        id: 3,
-        key: 'done',
-        name: 'Done'
-      }
-    }
-  },
-  101: {
-    id: '101',
-    name: 'Reopen',
-    to: {
-      id: '4',
-      name: 'Backlog',
-      statusCategory: {
-        id: 2,
-        key: 'new',
-        name: 'To Do'
-      }
-    }
-  },
-  161: {
-    id: '161',
-    name: 'Request Review',
-    to: {
-      id: '10396',
-      name: 'Code Review',
+      id: '10398',
+      name: 'Ready to Merge (STG)',
       statusCategory: {
         id: 4,
         key: 'indeterminate',
@@ -282,12 +168,41 @@ const doneTransitions = {
       }
     }
   },
-  281: {
-    id: '281',
-    name: 'Done',
+  171: {
+    id: '171',
+    name: 'Back to Development',
     to: {
       id: '10338',
-      name: 'Done',
+      name: 'In Development',
+      statusCategory: {
+        id: 4,
+        key: 'indeterminate',
+        name: 'In Progress'
+      }
+    }
+  }
+};
+
+const reopenedTransitions = {
+  231: {
+    id: '231',
+    name: 'Restart Development',
+    to: {
+      id: '10338',
+      name: 'In Development',
+      statusCategory: {
+        id: 4,
+        key: 'indeterminate',
+        name: 'In Progress'
+      }
+    }
+  },
+  241: {
+    id: '241',
+    name: 'Close',
+    to: {
+      id: '6',
+      name: 'Closed',
       statusCategory: {
         id: 3,
         key: 'done',
