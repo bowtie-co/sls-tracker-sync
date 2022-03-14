@@ -4,7 +4,8 @@ require('dotenv').config();
 
 const { JIRA_USER_ID, JIRA_PROJECT_KEY, JIRA_PARENT_KEY, JIRA_PREFIX = 'pt_' } = process.env;
 
-const { createIssue, editIssue, findIssue, transitionIssue, addComment, debugStuff } = require('./src/bitbucket');
+const statusMap = require('./src/status-map');
+const { createIssue, editIssue, findIssue, transitionIssue, getTransitions, addComment } = require('./src/bitbucket');
 
 const ticketPrefix = (id) => JIRA_PREFIX + id;
 const genSummary = (id, title) => `[${ticketPrefix(id)}] ${title}`;
@@ -26,6 +27,12 @@ module.exports.sync = async event => {
     const payload = JSON.parse(event.body);
 
     console.log('Payload', payload);
+
+    if (payload.changes) {
+      payload.changes.forEach(change => {
+        console.log('Handle change:', change);
+      });
+    }
 
     let existingIssue;
 
@@ -104,18 +111,50 @@ module.exports.sync = async event => {
           }
         }
 
+        /**
+         * Handle move/epic/icebox/labels? (kind = 'story_move_activity' | highlight = 'moved')
+         */
+
+        /**
+         * Handle estimate changes (highligh = 'estimated')
+         */
+        if (updateChanges && updateChanges.new_values.estimate) {
+          // Update estimate?
+        }
+
+        /**
+         * Handle status/state changes (use updateChanges.highlight??)
+         * - started
+         * - unstarted
+         * - finished
+         * - delivered
+         * - rejected
+         * - accepted
+         * - unscheduled (icebox)
+         */
         if (existingIssue && updateChanges && updateChanges.new_values.current_state) {
-          let transitionId = 11;
+          const newStatus = updateChanges.new_values.current_state;
+          const {transitions} = await getTransitions(existingIssue.id);
 
-          if (['started', 'finished'].includes(updateChanges.new_values.current_state)) {
-            transitionId = 21;
-          } else if (['accepted'].includes(updateChanges.new_values.current_state)) {
-            transitionId = 31;
-          } else if (['delivered'].includes(updateChanges.new_values.current_state)) {
-            transitionId = 41;
+          console.log('Available transitions', transitions.map(t => ({ id: t.id, name: t.name })));
+
+          if (statusMap[newStatus]) {
+            const fallback = statusMap[newStatus].or;
+            const targetId = statusMap[newStatus].to;
+            let transition = transitions.find(t => t.id === targetId.toString());
+
+            if (!transition) {
+              transition = transitions.find(t => t.to && t.to.statusCategory && t.to.statusCategory.id == fallback);
+              console.log(`[FALLBACK] Transitioning: ${newStatus}->${targetId} (fallback: ${fallback})`);
+            }
+
+            if (transition) {
+              await transitionIssue(existingIssue.key, { transition: { id: transition.id } });
+              console.log(`Transition: ${newStatus}->${targetId} --- [${transition.id}]](${transition.name} ==> [${transition.to.id}] ${transition.to.name})`);
+            }
+          } else {
+            console.error(`Missing/invalid status (cannot map to transition)`);
           }
-
-          await transitionIssue(existingIssue.key, { transition: { id: transitionId } });
         }
 
         break;

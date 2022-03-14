@@ -246,7 +246,18 @@ const releaseTransitions = {
 
 const doneTransitions = defaultTransitions;
 
+const pivotalHighlights = {
+  // unscheduled == icebox
+  status: ['started', 'finished', 'unstarted', 'delivered', 'rejected', 'accepted', 'unscheduled'],
+  estimate: ['estimated'],
+  create: ['added'],
+  edit: ['edited'],
+  review: ['updated'],
+}
+
 const statusMap = {
   Backlog: [],
 
 };
+
+
