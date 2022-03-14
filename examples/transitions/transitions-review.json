@@ -1,0 +1,149 @@
+{
+  "expand": "transitions",
+  "transitions": [
+    {
+      "id": "11",
+      "name": "Backlog",
+      "to": {
+        "self": "https://ordermark.atlassian.net/rest/api/2/status/10210",
+        "description": "",
+        "iconUrl": "https://ordermark.atlassian.net/",
+        "name": "Backlog",
+        "id": "10210",
+        "statusCategory": {
+          "self": "https://ordermark.atlassian.net/rest/api/2/statuscategory/2",
+          "id": 2,
+          "key": "new",
+          "colorName": "blue-gray",
+          "name": "To Do"
+        }
+      },
+      "hasScreen": false,
+      "isGlobal": true,
+      "isInitial": false,
+      "isAvailable": true,
+      "isConditional": false,
+      "isLooped": false
+    },
+    {
+      "id": "91",
+      "name": "Mark Closed",
+      "to": {
+        "self": "https://ordermark.atlassian.net/rest/api/2/status/6",
+        "description": "The issue is considered finished, the resolution is correct. Issues which are closed can be reopened.",
+        "iconUrl": "https://ordermark.atlassian.net/images/icons/statuses/closed.png",
+        "name": "Closed",
+        "id": "6",
+        "statusCategory": {
+          "self": "https://ordermark.atlassian.net/rest/api/2/statuscategory/3",
+          "id": 3,
+          "key": "done",
+          "colorName": "green",
+          "name": "Done"
+        }
+      },
+      "hasScreen": true,
+      "isGlobal": true,
+      "isInitial": false,
+      "isAvailable": true,
+      "isConditional": false,
+      "isLooped": false
+    },
+    {
+      "id": "101",
+      "name": "Reopen",
+      "to": {
+        "self": "https://ordermark.atlassian.net/rest/api/2/status/4",
+        "description": "This issue was once resolved, but the resolution was deemed incorrect. From here issues are either marked assigned or resolved.",
+        "iconUrl": "https://ordermark.atlassian.net/images/icons/statuses/reopened.png",
+        "name": "Reopened",
+        "id": "4",
+        "statusCategory": {
+          "self": "https://ordermark.atlassian.net/rest/api/2/statuscategory/2",
+          "id": 2,
+          "key": "new",
+          "colorName": "blue-gray",
+          "name": "To Do"
+        }
+      },
+      "hasScreen": false,
+      "isGlobal": true,
+      "isInitial": false,
+      "isAvailable": true,
+      "isConditional": false,
+      "isLooped": false
+    },
+    {
+      "id": "201",
+      "name": "Ready for Testing",
+      "to": {
+        "self": "https://ordermark.atlassian.net/rest/api/2/status/10399",
+        "description": "",
+        "iconUrl": "https://ordermark.atlassian.net/images/icons/statuses/generic.png",
+        "name": "FB Testing",
+        "id": "10399",
+        "statusCategory": {
+          "self": "https://ordermark.atlassian.net/rest/api/2/statuscategory/4",
+          "id": 4,
+          "key": "indeterminate",
+          "colorName": "yellow",
+          "name": "In Progress"
+        }
+      },
+      "hasScreen": false,
+      "isGlobal": false,
+      "isInitial": false,
+      "isAvailable": true,
+      "isConditional": false,
+      "isLooped": false
+    },
+    {
+      "id": "261",
+      "name": "Merge to Staging",
+      "to": {
+        "self": "https://ordermark.atlassian.net/rest/api/2/status/10420",
+        "description": "",
+        "iconUrl": "https://ordermark.atlassian.net/images/icons/statuses/generic.png",
+        "name": "STG Testing",
+        "id": "10420",
+        "statusCategory": {
+          "self": "https://ordermark.atlassian.net/rest/api/2/statuscategory/4",
+          "id": 4,
+          "key": "indeterminate",
+          "colorName": "yellow",
+          "name": "In Progress"
+        }
+      },
+      "hasScreen": false,
+      "isGlobal": false,
+      "isInitial": false,
+      "isAvailable": true,
+      "isConditional": false,
+      "isLooped": false
+    },
+    {
+      "id": "171",
+      "name": "Back to Development",
+      "to": {
+        "self": "https://ordermark.atlassian.net/rest/api/2/status/10338",
+        "description": "This status is managed internally by Jira Software",
+        "iconUrl": "https://ordermark.atlassian.net/",
+        "name": "In Development",
+        "id": "10338",
+        "statusCategory": {
+          "self": "https://ordermark.atlassian.net/rest/api/2/statuscategory/4",
+          "id": 4,
+          "key": "indeterminate",
+          "colorName": "yellow",
+          "name": "In Progress"
+        }
+      },
+      "hasScreen": false,
+      "isGlobal": false,
+      "isInitial": false,
+      "isAvailable": true,
+      "isConditional": false,
+      "isLooped": false
+    }
+  ]
+}
